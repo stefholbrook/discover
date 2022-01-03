@@ -7,6 +7,11 @@ export const typeDefs = gql`
     createdAt: Int!
   }
 
+  type Artist {
+    id: ID!
+    name: String!
+  }
+
   input SignUpInput {
     email: String!
     password: String!
@@ -29,6 +34,7 @@ export const typeDefs = gql`
     user(id: ID!): User!
     users: [User]!
     viewer: User
+    artists(location: String!): [Artist]
   }
 
   type Mutation {

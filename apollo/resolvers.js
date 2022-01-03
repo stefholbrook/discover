@@ -2,6 +2,7 @@ import { AuthenticationError, UserInputError } from 'apollo-server-micro'
 import { createUser, findUser, validatePassword } from '../lib/user'
 import { setLoginSession, getLoginSession } from '../lib/auth'
 import { removeTokenCookie } from '../lib/auth-cookies'
+import { fetchArtistsByCity } from '../lib/artists-list.js'
 
 export const resolvers = {
   Query: {
@@ -17,6 +18,9 @@ export const resolvers = {
           'Authentication token is invalid, please log in'
         )
       }
+    },
+    async artists(_parent, args, context, _info) {
+      const artistsList = await fetchArtistsByCity(args.location)
     },
   },
   Mutation: {
