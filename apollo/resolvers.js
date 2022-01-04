@@ -20,7 +20,7 @@ export const resolvers = {
       }
     },
     async artists(_parent, args, _context, _info) {
-      const artists = await fetchArtistsByCity(args.location)
+      const artists = await fetchArtistsByArea(args.location)
       return artists
     },
   },
