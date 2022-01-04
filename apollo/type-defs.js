@@ -8,8 +8,8 @@ export const typeDefs = gql`
   }
 
   type Artist {
-    id: ID!
-    name: String!
+    id: String
+    name: String
   }
 
   input SignUpInput {

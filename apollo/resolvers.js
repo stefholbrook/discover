@@ -19,8 +19,9 @@ export const resolvers = {
         )
       }
     },
-    async artists(_parent, args, context, _info) {
+    async artists(_parent, args, _context, _info) {
       const artistsList = await fetchArtistsByCity(args.location)
+      return artistsList
     },
   },
   Mutation: {
