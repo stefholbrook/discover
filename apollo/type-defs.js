@@ -1,15 +1,44 @@
 import { gql } from '@apollo/client'
 
 export const typeDefs = gql`
+  # artist types
+
+  type Artist {
+    id: ID
+    name: String
+    followers: Followers
+    disambiguation: String
+    external_urls: ExternalUrls
+    genres: [String]
+    area: Area
+  }
+
+  type ArtistInfo {
+    count: Int
+    offset: Int
+    artists: [Artist]
+  }
+
+  type Followers {
+    href: String
+    total: Int
+  }
+
+  type ExternalUrls {
+    spotify: String
+  }
+
+  type Area {
+    type: String
+    name: String
+  }
+
+  # user and signup types
+
   type User {
     id: ID!
     email: String!
     createdAt: Int!
-  }
-
-  type Artist {
-    id: String
-    name: String
   }
 
   input SignUpInput {
@@ -34,7 +63,7 @@ export const typeDefs = gql`
     user(id: ID!): User!
     users: [User]!
     viewer: User
-    artists(location: String!): [Artist]
+    artists(location: String!): ArtistInfo
   }
 
   type Mutation {
