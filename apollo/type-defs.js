@@ -11,6 +11,7 @@ export const typeDefs = gql`
     external_urls: ExternalUrls
     genres: [String]
     area: Area
+    images: [Image]
   }
 
   type ArtistInfo {
@@ -26,6 +27,12 @@ export const typeDefs = gql`
 
   type ExternalUrls {
     spotify: String
+  }
+
+  type Image {
+    height: Int
+    width: Int
+    url: String
   }
 
   type Area {
@@ -63,7 +70,7 @@ export const typeDefs = gql`
     user(id: ID!): User!
     users: [User]!
     viewer: User
-    artists(location: String!): ArtistInfo
+    localArtists(location: String!): ArtistInfo
   }
 
   type Mutation {

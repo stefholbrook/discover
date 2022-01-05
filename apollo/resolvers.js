@@ -2,7 +2,7 @@ import { AuthenticationError, UserInputError } from 'apollo-server-micro'
 import { createUser, findUser, validatePassword } from '../lib/user'
 import { setLoginSession, getLoginSession } from '../lib/auth'
 import { removeTokenCookie } from '../lib/auth-cookies'
-import { fetchArtistsByCity } from '../lib/artists-list.js'
+import { fetchArtistsByArea } from '../lib/artists-list.js'
 
 export const resolvers = {
   Query: {
@@ -19,7 +19,7 @@ export const resolvers = {
         )
       }
     },
-    async artists(_parent, args, _context, _info) {
+    async localArtists(_parent, args, _context, _info) {
       const artists = await fetchArtistsByArea(args.location)
       return artists
     },
