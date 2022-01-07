@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 import union from 'lodash.union'
 import { gql, useQuery } from '@apollo/client'
