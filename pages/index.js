@@ -1,20 +1,13 @@
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import union from 'lodash.union'
 import { gql, useQuery } from '@apollo/client'
-import styled from 'styled-components'
 
-const StyledArtistContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 30%);
-  gap: 10px;
-`
-const StyledImage = styled.img`
-  width: 200px;
-  height: auto;
-`
+import Feed from '../components/feed.js'
 
 const LOCAL_ARTISTS_QUERY = gql`
-  query LocalArtistsQuery($location: String!) {
-    localArtists(location: $location) {
+  query LocalArtistsQuery($location: String!, $offset: Int, $limit: Int) {
+    localArtists(location: $location, offset: $offset, limit: $limit) {
       count
       offset
       artists {
@@ -42,22 +35,48 @@ const LOCAL_ARTISTS_QUERY = gql`
 
 const Index = () => {
   const router = useRouter()
-  const { data, loading, error } = useQuery(LOCAL_ARTISTS_QUERY, {
-    variables: { location: router.query.location }
+  const [limit, setLimit] = useState(10)
+  const [fetchCount, setFetchCount] = useState(0)
+  const [artists, setArtists] = useState([])
+  const { data, error, fetchMore } = useQuery(LOCAL_ARTISTS_QUERY, {
+    variables: {
+      location: router.query.location,
+      offset: 0,
+    },
+    onCompleted: () => data && setArtists(data.localArtists.artists)
   })
-  const artists = data?.localArtists.artists
+  // let artists = artistsData.localArtists && artistsData.localArtists.artists
+
+  const loadMore = () => {
+    const currentLength = data.localArtists.artists.length
+
+    fetchMore({
+      variables: {
+        offset: 10 * fetchCount,
+        limit,
+      },
+    }).then((fetchMoreResult) => {
+      // console.log('fetchmore', fetchMoreResult)
+      // Update variables.limit for the original query to include
+      // the newly added feed items.
+      console.log(fetchMoreResult)
+
+      setFetchCount(fetchCount++)
+      setArtists(fetchMoreResult.data.localArtists.artists)
+      setLimit(currentLength + fetchMoreResult.data.localArtists.artists.length);
+    })
+  }
 
   if (error) return <p>{error.message}</p>
 
-  if (data) {
+  if (!!artists) {
     return (
-      <StyledArtistContainer>
-        {artists.map((artist) => {
-          return (
-            <StyledImage src={artist.images[0].url} />
-          )
-        })}
-      </StyledArtistContainer>
+      <>
+        <Feed
+          artists={artists}
+          onLoadMore={() => loadMore()}
+        />
+      </>
     )
   }
 
