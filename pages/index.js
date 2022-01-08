@@ -2,8 +2,14 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 import union from 'lodash.union'
 import { gql, useQuery } from '@apollo/client'
+import styled from 'styled-components'
 
 import Feed from '../components/feed.js'
+
+const StyledContainer = styled.div`
+  margin: 80px auto;
+  max-width: 74em;
+`
 
 const LOCAL_ARTISTS_QUERY = gql`
   query LocalArtistsQuery($location: String!, $offset: Int, $limit: Int) {
@@ -36,33 +42,39 @@ const LOCAL_ARTISTS_QUERY = gql`
 const Index = () => {
   const router = useRouter()
   const [limit, setLimit] = useState(10)
-  const [fetchCount, setFetchCount] = useState(0)
+  // const [fetchCount, setFetchCount] = useState(0)
   const [artists, setArtists] = useState([])
   const { data, error, fetchMore } = useQuery(LOCAL_ARTISTS_QUERY, {
     variables: {
       location: router.query.location,
       offset: 0,
     },
-    onCompleted: () => data && setArtists(data.localArtists.artists)
+    onCompleted: () => data && setArtists(data.localArtists.artists),
   })
-  // let artists = artistsData.localArtists && artistsData.localArtists.artists
+  // let artists = data && data.localArtists.artists
+  // let fetchCount = 0
+  // console.log('data', data)
 
   const loadMore = () => {
-    const currentLength = data.localArtists.artists.length
+    const currentLength = data && data.localArtists.artists.length
 
     fetchMore({
+      fetchPolicy: "cache-first",
       variables: {
-        offset: 10 * fetchCount,
-        limit,
+        offset: currentLength,
+        limit
       },
     }).then((fetchMoreResult) => {
       // console.log('fetchmore', fetchMoreResult)
       // Update variables.limit for the original query to include
       // the newly added feed items.
-      console.log(fetchMoreResult)
 
-      setFetchCount(fetchCount++)
-      setArtists(fetchMoreResult.data.localArtists.artists)
+      // fetchCount++
+      console.log(fetchMoreResult.data.localArtists.artists)
+      console.log('artists', artists)
+
+
+      setArtists(union(data.localArtists.artists, fetchMoreResult.data.localArtists.artists))
       setLimit(currentLength + fetchMoreResult.data.localArtists.artists.length);
     })
   }
@@ -71,12 +83,12 @@ const Index = () => {
 
   if (!!artists) {
     return (
-      <>
+      <StyledContainer>
         <Feed
           artists={artists}
           onLoadMore={() => loadMore()}
         />
-      </>
+      </StyledContainer>
     )
   }
 
