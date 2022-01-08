@@ -42,8 +42,8 @@ const LOCAL_ARTISTS_QUERY = gql`
 const Index = () => {
   const router = useRouter()
   const [limit, setLimit] = useState(10)
-  // const [fetchCount, setFetchCount] = useState(0)
-  const [artists, setArtists] = useState([])
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [artists, setArtists] = useState(null)
   const { data, error, fetchMore } = useQuery(LOCAL_ARTISTS_QUERY, {
     variables: {
       location: router.query.location,
@@ -51,33 +51,30 @@ const Index = () => {
     },
     onCompleted: () => data && setArtists(data.localArtists.artists),
   })
-  // let artists = data && data.localArtists.artists
-  // let fetchCount = 0
-  // console.log('data', data)
 
   const loadMore = () => {
-    const currentLength = data && data.localArtists.artists.length
+    const currentLength = artists.length
+
+    setLoadingMore(true)
 
     fetchMore({
-      fetchPolicy: "cache-first",
       variables: {
         offset: currentLength,
         limit
       },
     }).then((fetchMoreResult) => {
-      // console.log('fetchmore', fetchMoreResult)
-      // Update variables.limit for the original query to include
-      // the newly added feed items.
+      // TODO: handle if limit is 100 or when data length === count
+      // console.log(currentLength + fetchMoreResult.data.localArtists.artists.length)
 
-      // fetchCount++
-      console.log(fetchMoreResult.data.localArtists.artists)
-      console.log('artists', artists)
-
-
-      setArtists(union(data.localArtists.artists, fetchMoreResult.data.localArtists.artists))
-      setLimit(currentLength + fetchMoreResult.data.localArtists.artists.length);
+      setLoadingMore(false)
+      // merge `artists` with new results so it renders all previously fetched results
+      setArtists(union(artists, fetchMoreResult.data.localArtists.artists))
+      // MusicBrainz max limit is 100
+      setLimit(currentLength + fetchMoreResult.data.localArtists.artists.length)
     })
   }
+
+  console.log(loadingMore)
 
   if (error) return <p>{error.message}</p>
 
@@ -87,6 +84,7 @@ const Index = () => {
         <Feed
           artists={artists}
           onLoadMore={() => loadMore()}
+          loading={loadingMore}
         />
       </StyledContainer>
     )
