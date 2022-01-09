@@ -12,6 +12,19 @@ const StyledArtistContainer = styled.div`
   align-items: center;
   overflow: scroll;
 `
+const StyledSectionHeader = styled.div`
+  margin: 60px 0;
+`
+const StyledTitle = styled.h2`
+  font-size: 32px;
+`
+const StyledSubtitle = styled.h2`
+  color: var(--main-color);
+  margin: 0;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+`
 const StyledArtist = styled.div`
   border: 1px solid var(--main-color);
   padding: 20px;
@@ -53,21 +66,27 @@ class Feed extends Component {
     // TODO: loader, filters
 
     return (
-      <StyledArtistContainer onScroll={(event) => this.handleScroll(event, loadMore)}>
-        {spotifyArtists && spotifyArtists.map((artist, index) => {
-          return (
-            <StyledArtist key={index}>
-              <StyledSpotifyLogo href={artist.external_urls.spotify}>
-                <FontAwesomeIcon icon={faSpotify} size='2x' />
-              </StyledSpotifyLogo>
-              <StyledImage src={artist.images[0].url} />
-              <h5>{artist.name}</h5>
-              <p>Followers: {artist.followers.total}</p>
-            </StyledArtist>
-          )
-        })}
-        {loading && 'loading....'}
-      </StyledArtistContainer>
+      <div>
+        <StyledSectionHeader>
+          <StyledTitle>Songs</StyledTitle>
+          <StyledSubtitle>See All</StyledSubtitle>
+        </StyledSectionHeader>
+        <StyledArtistContainer onScroll={(event) => this.handleScroll(event, loadMore)}>
+          {spotifyArtists && spotifyArtists.map((artist, index) => {
+            return (
+              <StyledArtist key={index}>
+                <StyledSpotifyLogo href={artist.external_urls.spotify}>
+                  <FontAwesomeIcon icon={faSpotify} size='2x' />
+                </StyledSpotifyLogo>
+                <StyledImage src={artist.images[0].url} />
+                <h5>{artist.name}</h5>
+                <p>Followers: {artist.followers.total}</p>
+              </StyledArtist>
+            )
+          })}
+          {loading && 'loading....'}
+        </StyledArtistContainer>
+      </div>
     )
   }
 }

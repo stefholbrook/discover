@@ -5,10 +5,40 @@ import { gql, useQuery } from '@apollo/client'
 import styled from 'styled-components'
 
 import Feed from '../components/feed.js'
+import QueryForm from '../components/query-form.js'
 
+const StyledHero = styled.div`
+  background-image: ${({ image }) => `linear-gradient(to top, rgba(0, 0, 0, 0.8) 50%, rgba(255, 255, 255, 0)), url(${image})`};
+  background-position-y: inherit;
+  background-size: cover;
+  background-attachment: inherit;
+  background-repeat: no-repeat;
+  padding: 40px 0 90px;
+  color: #fff;
+`
+const StyledSiteHeader = styled.div`
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 20px;
+`
+const StyledIntroContent = styled.div`
+  margin-top: 90px;
+`
+const IntroDesc = styled.p`
+  margin: 0;
+  color: rgba(255, 255, 255, .7);
+  line-height: 1.6;
+`
+const StyledIntroTitle = styled.h1`
+  font-size: 42px;
+  margin: 14px 0;
+`
 const StyledContainer = styled.div`
-  margin: 80px auto;
+  ${'' /* margin: 80px auto;
+  max-width: 74em; */}
+  margin: 0 auto;
   max-width: 74em;
+  padding: 0 20px;
 `
 
 const LOCAL_ARTISTS_QUERY = gql`
@@ -80,13 +110,24 @@ const Index = () => {
 
   if (!!artists) {
     return (
-      <StyledContainer>
-        <Feed
-          artists={artists}
-          onLoadMore={() => loadMore()}
-          loading={loadingMore}
-        />
-      </StyledContainer>
+      <>
+        <StyledHero image='/images/swirls.jpeg'>
+          <StyledSiteHeader>
+            <StyledIntroContent>
+              <IntroDesc>dǝemo.</IntroDesc>
+              <StyledIntroTitle>Discover | The best music you're never heard.</StyledIntroTitle>
+              <QueryForm />
+            </StyledIntroContent>
+          </StyledSiteHeader>
+        </StyledHero>
+        <StyledContainer>
+          <Feed
+            artists={artists}
+            onLoadMore={() => loadMore()}
+            loading={loadingMore}
+          />
+        </StyledContainer>
+      </>
     )
   }
 
