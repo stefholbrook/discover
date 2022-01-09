@@ -28,7 +28,7 @@ const StyledSubtitle = styled.h2`
 const StyledArtist = styled.div`
   border: 1px solid var(--main-color);
   padding: 20px;
-  cursor: pointer;
+  ${'' /* cursor: pointer; */}
 `
 const StyledImage = styled.img`
   width: 320px;
@@ -68,14 +68,14 @@ class Feed extends Component {
     return (
       <div>
         <StyledSectionHeader>
-          <StyledTitle>Songs</StyledTitle>
-          <StyledSubtitle>See All</StyledSubtitle>
+          <StyledTitle>Results</StyledTitle>
+          <StyledSubtitle>Filters:</StyledSubtitle>
         </StyledSectionHeader>
         <StyledArtistContainer onScroll={(event) => this.handleScroll(event, loadMore)}>
           {spotifyArtists && spotifyArtists.map((artist, index) => {
             return (
               <StyledArtist key={index}>
-                <StyledSpotifyLogo href={artist.external_urls.spotify}>
+                <StyledSpotifyLogo href={artist.external_urls.spotify} target='_blank'>
                   <FontAwesomeIcon icon={faSpotify} size='2x' />
                 </StyledSpotifyLogo>
                 <StyledImage src={artist.images[0].url} />
