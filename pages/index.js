@@ -80,8 +80,8 @@ const Index = () => {
 
   const { data, error, fetchMore, refetch, loading } = useQuery(LOCAL_ARTISTS_QUERY, {
     variables: {
-      location: query.location,
-      decade: query.decade,
+      location: query?.location,
+      decade: query?.decade,
       offset: 0,
       notifyOnNetworkStatusChange: true,
     },
