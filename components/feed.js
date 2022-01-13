@@ -83,7 +83,7 @@ class Feed extends Component {
     const spotifyArtists = artists && artists.filter((artist) => !!artist.images && !!artist.images.length && artist.followers.total <= 60000)
     // combine genres and remove duplicates
     // const genres = [...new Set(spotifyArtists.map((artist) => artist.genres).flat())]
-    const placeHolder = <RectShape style={{ width: 300, height: 480, backgroundColor: 'var(--light-color)' }} rows={5} />
+    const placeHolder = <RectShape style={{ width: 300, height: 480, backgroundColor: 'transparent', border: '1px solid var(--light-color)' }} rows={5} />
 
     return (
       <div>
@@ -91,7 +91,7 @@ class Feed extends Component {
           <StyledTitle>Results</StyledTitle>
           <StyledSubtitle>Filters:</StyledSubtitle>
         </StyledSectionHeader>
-        <ReactPlaceholder customPlaceholder={placeHolder} ready={!!loading} showLoadingAnimation>
+        <ReactPlaceholder customPlaceholder={placeHolder} ready={!!loading} showLoadingAnimation rows={2}>
           <StyledArtistContainer onScroll={(event) => this.handleScroll(event, loadMore)}>
             {spotifyArtists && spotifyArtists.map((artist, index) => {
               return (
