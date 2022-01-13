@@ -11,6 +11,10 @@ const StyledArtistContainer = styled.div`
   justify-items: center;
   align-items: center;
   overflow: scroll;
+
+  @media (max-width: 960px) {
+    grid-template-columns: repeat(1, auto);
+  }
 `
 const StyledSectionHeader = styled.div`
   margin: 60px 0;
@@ -28,7 +32,6 @@ const StyledSubtitle = styled.h2`
 const StyledArtist = styled.div`
   border: 1px solid var(--main-color);
   padding: 20px;
-  ${'' /* cursor: pointer; */}
 `
 const StyledImage = styled.img`
   width: 320px;
@@ -60,10 +63,13 @@ class Feed extends Component {
   }
 
   render() {
-    const { artists, loading } = this.props
+    const { artists, loading, loadingMore } = this.props
     const spotifyArtists = artists.filter((artist) => !!artist.images && !!artist.images.length && artist.followers.total <= 60000)
+    // combine genres and remove duplicates
+    const genres = [...new Set(spotifyArtists.map((artist) => artist.genres).flat())]
 
-    // TODO: loader, filters
+    // TODO: filters
+    console.log(!!loading)
 
     return (
       <div>
@@ -71,21 +77,26 @@ class Feed extends Component {
           <StyledTitle>Results</StyledTitle>
           <StyledSubtitle>Filters:</StyledSubtitle>
         </StyledSectionHeader>
-        <StyledArtistContainer onScroll={(event) => this.handleScroll(event, loadMore)}>
-          {spotifyArtists && spotifyArtists.map((artist, index) => {
-            return (
-              <StyledArtist key={index}>
-                <StyledSpotifyLogo href={artist.external_urls.spotify} target='_blank'>
-                  <FontAwesomeIcon icon={faSpotify} size='2x' />
-                </StyledSpotifyLogo>
-                <StyledImage src={artist.images[0].url} />
-                <h5>{artist.name}</h5>
-                <p>Followers: {artist.followers.total}</p>
-              </StyledArtist>
-            )
-          })}
-          {loading && 'loading....'}
-        </StyledArtistContainer>
+        {!!loading
+          ? 'loading...'
+          : (
+            <StyledArtistContainer onScroll={(event) => this.handleScroll(event, loadMore)}>
+              {spotifyArtists && spotifyArtists.map((artist, index) => {
+                return (
+                  <StyledArtist key={index}>
+                    <StyledSpotifyLogo href={artist.external_urls.spotify} target='_blank'>
+                      <FontAwesomeIcon icon={faSpotify} size='2x' />
+                    </StyledSpotifyLogo>
+                    <StyledImage src={artist.images[0].url} />
+                    <h5>{artist.name}</h5>
+                    <p>Followers: {artist.followers.total}</p>
+                  </StyledArtist>
+                )
+              })}
+              {loadingMore && 'loading....'}
+            </StyledArtistContainer>
+          )
+        }
       </div>
     )
   }

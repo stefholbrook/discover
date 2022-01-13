@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import union from 'lodash.union'
 import { gql, useQuery } from '@apollo/client'
@@ -42,8 +42,8 @@ const StyledContainer = styled.div`
 `
 
 const LOCAL_ARTISTS_QUERY = gql`
-  query LocalArtistsQuery($location: String!, $offset: Int, $limit: Int) {
-    localArtists(location: $location, offset: $offset, limit: $limit) {
+  query LocalArtistsQuery($location: String!, $decade: String, $offset: Int, $limit: Int) {
+    localArtists(location: $location, decade: $decade, offset: $offset, limit: $limit) {
       count
       offset
       artists {
@@ -74,13 +74,21 @@ const Index = () => {
   const [limit, setLimit] = useState(10)
   const [loadingMore, setLoadingMore] = useState(false)
   const [artists, setArtists] = useState(null)
-  const { data, error, fetchMore } = useQuery(LOCAL_ARTISTS_QUERY, {
+
+  let { search } = router.query
+  let query = search && JSON.parse(atob(search))
+
+  const { data, error, fetchMore, refetch, loading } = useQuery(LOCAL_ARTISTS_QUERY, {
     variables: {
-      location: router.query.location,
+      location: query.location,
+      decade: query.decade,
       offset: 0,
+      notifyOnNetworkStatusChange: true,
     },
-    onCompleted: () => data && setArtists(data.localArtists.artists),
+    onCompleted: () => data && setArtists(data.localArtists.artists)
   })
+
+  console.log('loading', !!loading)
 
   const loadMore = () => {
     const currentLength = artists.length
@@ -104,34 +112,30 @@ const Index = () => {
     })
   }
 
-  console.log(loadingMore)
-
   if (error) return <p>{error.message}</p>
 
-  if (!!artists) {
-    return (
-      <>
+  return (
+    <>
         <StyledHero image='/images/swirls.jpeg'>
           <StyledSiteHeader>
             <StyledIntroContent>
-              <IntroDesc>dǝemo.</IntroDesc>
-              <StyledIntroTitle>Discover | The best music you're never heard.</StyledIntroTitle>
-              <QueryForm />
+            <IntroDesc>daemo.</IntroDesc>
+            <StyledIntroTitle>Discover | The best music you've never heard.</StyledIntroTitle>
+            <QueryForm artists={artists || []} refetch={() => refetch()} />
             </StyledIntroContent>
           </StyledSiteHeader>
         </StyledHero>
         <StyledContainer>
-          <Feed
-            artists={artists}
-            onLoadMore={() => loadMore()}
-            loading={loadingMore}
-          />
+
+        <Feed
+          artists={artists}
+          onLoadMore={() => loadMore()}
+          loadingMore={loadingMore}
+          loading={loading}
+        />
         </StyledContainer>
       </>
-    )
-  }
-
-  return <p>Loading...</p>
+  )
 }
 
 export default Index

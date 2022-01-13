@@ -70,7 +70,7 @@ export const typeDefs = gql`
     user(id: ID!): User!
     users: [User]!
     viewer: User
-    localArtists(location: String!, offset: Int, limit: Int): ArtistInfo
+    localArtists(location: String, decade: String, offset: Int, limit: Int): ArtistInfo
   }
 
   type Mutation {

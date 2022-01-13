@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import { useRouter } from 'next/router'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styled from 'styled-components'
 
 const StyledIntroButton = styled.button`
@@ -17,10 +20,10 @@ const StyledIntroButton = styled.button`
   border: 1px solid #fff;
   min-width: 0px 50px;
 `
-const StyledForm = styled.div`
-  display: inline-grid;
-  grid-template-columns: repeat(1, 25%);
-`
+// const StyledForm = styled.div`
+//   display: inline-grid;
+//   grid-template-columns: repeat(1, 25%);
+// `
 const StyledInput = styled.input`
   background-color: transparent;
   color: var(--light-color);
@@ -40,59 +43,80 @@ const StyledSelect = styled.select`
 `
 const StyledSelectLabel = styled.label`
   margin-left: 16px;
+  ${'' /* hide the label while keeping accessibility: */}
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  width: auto;
 `
 
-export default function QueryForm() {
-  const [search, setSearch] = useState('')
-  const [genre, setGenre] = useState('')
-  const [decade, setDecade] = useState('')
+export default function QueryForm({ artists, refetch }) {
+  const router = useRouter()
+  const [location, setLocation] = useState('')
+  const [genre, setGenre] = useState('genre')
+  const [decade, setDecade] = useState('decade')
+
   const handleSubmit = (event) => {
     event.preventDefault()
-    console.log(search)
+
+    const query = { location, decade }
+
+    router.push(`?search=${btoa(JSON.stringify(query))}`)
+    return refetch({ variables: { location, decade } })
+
   }
+
+
 
   return (
     <form onSubmit={handleSubmit}>
-      <StyledForm>
-        <StyledSelectLabel htmlFor='genre'>Genre</StyledSelectLabel>
-        <StyledSelect
-          id='genre'
-          value={genre}
-          placeholder='genre'
-          onChange={(event) => setGenre(event.target.value)}
-        >
-          <option value='cool'>Cool</option>
-          <option value='genre'>Genre</option>
-        </StyledSelect>
-      </StyledForm>
-      <StyledForm>
-        <StyledSelectLabel htmlFor='decade'>Decade</StyledSelectLabel>
-        <StyledSelect
-          id='decade'
-          value=''
-          placeholder='decade'
-          onChange={(event) => setDecade(event.target.value)}
-        >
-          <option value='cool'>Last year</option>
-          <option value='genre'>Last 5 years</option>
-          <option value='genre'>2010s</option>
-          <option value='genre'>2000s</option>
-          <option value='genre'>1990s</option>
-          <option value='genre'>1980s</option>
-          <option value='genre'>1970s</option>
-        </StyledSelect>
-      </StyledForm>
-      <StyledForm>
-        <StyledSelectLabel htmlFor='search'>Search</StyledSelectLabel>
-        <StyledInput
-          id='search'
-          type='search'
-          onChange={(event) => {
-            console.log(event.target.value)
-            return setSearch(event.target.value)
-          }}
-        />
-      </StyledForm>
+      {/* <StyledSelectLabel htmlFor='genre' />
+      <StyledSelect
+        disabled={!genres.length}
+        id='genre'
+        value={genre}
+        onChange={(event) => setGenre(event.target.value)}
+      >
+        <option value='genre' disabled hidden>genre</option>
+        {genres.map((genre, index) => {
+          return <option key={index} value={genre}>{genre}</option>
+        })}
+      </StyledSelect> */}
+
+
+      <StyledSelectLabel htmlFor='decade' />
+      <StyledSelect
+        id='decade'
+        value={decade}
+        placeholder='decade'
+        onChange={(event) => setDecade(event.target.value)}
+      >
+        <option value='decade' disabled hidden>decade</option>
+        <option value='2021'>Last year</option>
+        <option value='2017 TO 2022'>Last 5 years</option>
+        <option value='2010 TO 2019'>2010s</option>
+        <option value='2000 TO 2009'>2000s</option>
+        <option value='1990 TO 1999'>1990s</option>
+        <option value='1980 TO 1989'>1980s</option>
+        <option value='1970 TO 1979'>1970s</option>
+      </StyledSelect>
+
+
+      <StyledSelectLabel htmlFor='search' />
+      <StyledInput
+        id='search'
+        type='search'
+        value={location}
+        placeholder='search here'
+        onChange={(event) => setLocation(event.target.value)}
+      />
+
+      <FontAwesomeIcon icon={faSearch} onClick={handleSubmit}>
+        <button type='submit' />
+      </FontAwesomeIcon>
+
       {/* <StyledIntroButton>Shuffle</StyledIntroButton>
       <StyledIntroButton>Radio</StyledIntroButton>
       <StyledIntroButton>Subscribe</StyledIntroButton> */}

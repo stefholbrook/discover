@@ -34,7 +34,6 @@ function createApolloClient() {
                 // Concatenate the incoming list items with
                 // the existing list items.
                 merge(existing = [], incoming) {
-                  console.log('merge', [...existing, ...incoming.artists])
                   return [...existing, ...incoming.artists];
                 },
               }
