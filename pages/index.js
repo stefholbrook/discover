@@ -80,25 +80,27 @@ const Index = () => {
 
   const { data, error, fetchMore, refetch, loading } = useQuery(LOCAL_ARTISTS_QUERY, {
     variables: {
-      location: query?.location,
-      decade: query?.decade,
+      location: query?.location || 'los angeles',
+      decade: query?.decade || '2000 TO 2009',
       offset: 0,
       notifyOnNetworkStatusChange: true,
     },
     onCompleted: () => data && setArtists(data.localArtists.artists)
   })
 
-  console.log('loading', !!loading)
-
   const loadMore = () => {
+    if (data.localArtists.count === artists.length) return null
     const currentLength = artists.length
+
+    console.log('count', data.localArtists.count)
+    console.log('limit', limit)
 
     setLoadingMore(true)
 
     fetchMore({
       variables: {
         offset: currentLength,
-        limit
+        // limit
       },
     }).then((fetchMoreResult) => {
       // TODO: handle if limit is 100 or when data length === count
@@ -108,7 +110,7 @@ const Index = () => {
       // merge `artists` with new results so it renders all previously fetched results
       setArtists(union(artists, fetchMoreResult.data.localArtists.artists))
       // MusicBrainz max limit is 100
-      setLimit(currentLength + fetchMoreResult.data.localArtists.artists.length)
+      // setLimit(currentLength + fetchMoreResult.data.localArtists.artists.length)
     })
   }
 
@@ -132,6 +134,7 @@ const Index = () => {
           onLoadMore={() => loadMore()}
           loadingMore={loadingMore}
           loading={loading}
+          query={query}
         />
         </StyledContainer>
       </>

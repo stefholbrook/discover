@@ -20,18 +20,14 @@ const StyledIntroButton = styled.button`
   border: 1px solid #fff;
   min-width: 0px 50px;
 `
-// const StyledForm = styled.div`
-//   display: inline-grid;
-//   grid-template-columns: repeat(1, 25%);
-// `
 const StyledInput = styled.input`
   background-color: transparent;
   color: var(--light-color);
-  border: 1px solid var(--light-color);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 4px;
   margin: 16px;
   padding: 8px;
-  width: 150px;
+  width: 'fit-content';
 `
 const StyledSelect = styled.select`
   width: 150px;
@@ -51,12 +47,15 @@ const StyledSelectLabel = styled.label`
   position: static;
   width: auto;
 `
+const StyledButton = styled.button`
+  background-color: transparent;
+  border: none;
+`
 
-export default function QueryForm({ artists, refetch }) {
+export default function QueryForm({ refetch }) {
   const router = useRouter()
   const [location, setLocation] = useState('')
-  const [genre, setGenre] = useState('genre')
-  const [decade, setDecade] = useState('decade')
+  const [decade, setDecade] = useState('')
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -65,27 +64,10 @@ export default function QueryForm({ artists, refetch }) {
 
     router.push(`?search=${btoa(JSON.stringify(query))}`)
     return refetch({ variables: { location, decade } })
-
   }
-
-
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* <StyledSelectLabel htmlFor='genre' />
-      <StyledSelect
-        disabled={!genres.length}
-        id='genre'
-        value={genre}
-        onChange={(event) => setGenre(event.target.value)}
-      >
-        <option value='genre' disabled hidden>genre</option>
-        {genres.map((genre, index) => {
-          return <option key={index} value={genre}>{genre}</option>
-        })}
-      </StyledSelect> */}
-
-
       <StyledSelectLabel htmlFor='decade' />
       <StyledSelect
         id='decade'
@@ -93,8 +75,8 @@ export default function QueryForm({ artists, refetch }) {
         placeholder='decade'
         onChange={(event) => setDecade(event.target.value)}
       >
-        <option value='decade' disabled hidden>decade</option>
-        <option value='2021'>Last year</option>
+        <option value='' disabled hidden>begin date</option>
+        <option value='2020 TO 2021'>Last year</option>
         <option value='2017 TO 2022'>Last 5 years</option>
         <option value='2010 TO 2019'>2010s</option>
         <option value='2000 TO 2009'>2000s</option>
@@ -109,17 +91,15 @@ export default function QueryForm({ artists, refetch }) {
         id='search'
         type='search'
         value={location}
-        placeholder='search here'
+        size='30'
+        placeholder='search city, state, or country'
         onChange={(event) => setLocation(event.target.value)}
       />
 
-      <FontAwesomeIcon icon={faSearch} onClick={handleSubmit}>
-        <button type='submit' />
-      </FontAwesomeIcon>
+      <StyledButton type='submit'>
 
-      {/* <StyledIntroButton>Shuffle</StyledIntroButton>
-      <StyledIntroButton>Radio</StyledIntroButton>
-      <StyledIntroButton>Subscribe</StyledIntroButton> */}
+        <FontAwesomeIcon icon={faSearch} onClick={handleSubmit} />
+      </StyledButton>
     </form>
   )
 }

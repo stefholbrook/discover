@@ -1,10 +1,9 @@
 import { Component } from 'react'
-import ReactPlaceholder from 'react-placeholder'
-import { RectShape } from 'react-placeholder/lib/placeholders'
-import 'react-placeholder/lib/reactPlaceholder.css'
 import { faSpotify } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
+
+import Loader from './loader.js'
 
 const StyledArtistContainer = styled.div`
   display: grid;
@@ -13,7 +12,6 @@ const StyledArtistContainer = styled.div`
   justify-content: center;
   justify-items: center;
   align-items: center;
-  overflow: scroll;
 
   @media (max-width: 960px) {
     grid-template-columns: repeat(1, auto);
@@ -45,6 +43,9 @@ const StyledArtist = styled.div`
   border: 1px solid var(--main-color);
   height: 480px;
   padding: 0px 20px;
+  @media (max-width: 960px) {
+    max-width: 320px;
+  }
 `
 const StyledImage = styled.img`
   width: 320px;
@@ -57,8 +58,43 @@ const StyledSpotifyLogo = styled.a`
   text-decoration: none;
   color: #1DB954;
 `
-const Loader = styled(RectShape)`
+const loading = keyframes`
+  0%,
+  100% {
+    transform: scale(0.0);
+  }
+  50% {
+    transform: scale(1.0);
+  }
+`
+const StyledLoadMore = styled.div`
+  position: relative;
+  display: inline-block;
+	width: 80px;
+	height: 80px;
+	color: inherit;
+	vertical-align: middle;
+	pointer-events: none;
+  margin: 150px;
 
+	&:before,
+	&:after {
+    content: '';
+    width: inherit;
+    height: inherit;
+    border-radius: 50%;
+    background-color: var(--light-color);
+    opacity: 0.6;
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: ${loading} 2.0s infinite ease-in-out;
+  }
+
+  &:after {
+    animation-delay: -1.0s;
+  }
+}
 `
 
 class Feed extends Component {
@@ -79,20 +115,19 @@ class Feed extends Component {
   }
 
   render() {
-    const { artists, loading, loadingMore } = this.props
+    const { artists, loading, loadingMore, query } = this.props
     const spotifyArtists = artists && artists.filter((artist) => !!artist.images && !!artist.images.length && artist.followers.total <= 60000)
     // combine genres and remove duplicates
     // const genres = [...new Set(spotifyArtists.map((artist) => artist.genres).flat())]
-    const placeHolder = <RectShape style={{ width: 300, height: 480, backgroundColor: 'transparent', border: '1px solid var(--light-color)' }} rows={5} />
 
     return (
       <div>
         <StyledSectionHeader>
           <StyledTitle>Results</StyledTitle>
-          <StyledSubtitle>Filters:</StyledSubtitle>
+          <StyledSubtitle>Filters: {query?.location || 'los angeles'}, {query?.decade || '2000s'}</StyledSubtitle>
         </StyledSectionHeader>
-        <ReactPlaceholder customPlaceholder={placeHolder} ready={!!loading} showLoadingAnimation rows={2}>
-          <StyledArtistContainer onScroll={(event) => this.handleScroll(event, loadMore)}>
+        <Loader loading={!!loading}>
+          <StyledArtistContainer onScroll={(event) => this.handleScroll(event)}>
             {spotifyArtists && spotifyArtists.map((artist, index) => {
               return (
                 <StyledArtist key={index}>
@@ -102,13 +137,13 @@ class Feed extends Component {
                   <StyledImage src={artist.images[0].url} />
                   <h4>{artist.name}</h4>
                   <p>Followers: {artist.followers.total}</p>
-                  <p>{!!artist.genres.length && `Genres: ${artist.genres}`}</p>
+                  <p>{!!artist.genres.length && `Genres: ${artist.genres.slice(0, 3)}`}</p>
                 </StyledArtist>
               )
             })}
-            {loadingMore && 'loading....'}
+            {loadingMore && <StyledLoadMore />}
           </StyledArtistContainer>
-        </ReactPlaceholder>
+        </Loader>
       </div>
     )
   }
