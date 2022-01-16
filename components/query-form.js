@@ -28,10 +28,15 @@ const StyledInput = styled.input`
   margin: 16px;
   padding: 8px;
   width: 'fit-content';
+
+  @media (max-width: 960px) {
+    margin-left: 0;
+  }
 `
 const StyledSelect = styled.select`
   width: 150px;
   margin: 16px;
+  margin-left: 0;
   padding: 8px;
   background-color: transparent;
   color: var(--light-color);
@@ -50,12 +55,14 @@ const StyledSelectLabel = styled.label`
 const StyledButton = styled.button`
   background-color: transparent;
   border: none;
+  opacity: ${({ disabled }) => disabled && '50%'};
 `
 
 export default function QueryForm({ refetch }) {
   const router = useRouter()
   const [location, setLocation] = useState('')
   const [decade, setDecade] = useState('')
+  let errors = location.split(' ').join('').match(/[\W+\d+_]/g)
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -96,10 +103,10 @@ export default function QueryForm({ refetch }) {
         onChange={(event) => setLocation(event.target.value)}
       />
 
-      <StyledButton type='submit'>
-
+      <StyledButton type='submit' disabled={!!errors}>
         <FontAwesomeIcon icon={faSearch} onClick={handleSubmit} />
       </StyledButton>
+      {!!errors && <p>search cannot contain numbers or special characters.</p>}
     </form>
   )
 }

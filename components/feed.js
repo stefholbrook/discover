@@ -19,6 +19,10 @@ const StyledArtistContainer = styled.div`
 `
 const StyledSectionHeader = styled.div`
   margin: 60px 0;
+
+  @media (max-width: 960px) {
+    margin: 60px 20px;
+  }
 `
 const StyledTitle = styled.h2`
   font-size: 32px;
@@ -30,19 +34,10 @@ const StyledSubtitle = styled.h2`
   text-transform: uppercase;
   letter-spacing: 2px;
 `
-const StyledGenrePill = styled.div`
-  display: inline-flex;
-  background: transparent;
-  border: 1px solid var(--light-color);
-  border-radius: 20px;
-  padding: 8px;
-  width: fit-content;
-  margin: 8px;
-`
 const StyledArtist = styled.div`
   border: 1px solid var(--main-color);
   height: 480px;
-  padding: 0px 20px;
+  padding: 20px;
   @media (max-width: 960px) {
     max-width: 320px;
   }
@@ -115,10 +110,14 @@ class Feed extends Component {
   }
 
   render() {
-    const { artists, loading, loadingMore, query } = this.props
+    const { artists, error, loading, loadingMore, query } = this.props
+    // const hasError = !error || !!artists || !!artists?.length
     const spotifyArtists = artists && artists.filter((artist) => !!artist.images && !!artist.images.length && artist.followers.total <= 60000)
     // combine genres and remove duplicates
     // const genres = [...new Set(spotifyArtists.map((artist) => artist.genres).flat())]
+
+
+    // if (hasError) return <StyledSubtitle>No results found for your search.</StyledSubtitle>
 
     return (
       <div>

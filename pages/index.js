@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 import union from 'lodash.union'
 import { gql, useQuery } from '@apollo/client'
@@ -8,18 +8,22 @@ import Feed from '../components/feed.js'
 import QueryForm from '../components/query-form.js'
 
 const StyledHero = styled.div`
-  background-image: ${({ image }) => `linear-gradient(to top, rgba(0, 0, 0, 0.8) 50%, rgba(255, 255, 255, 0)), url(${image})`};
+  background-image: ${({ image }) => `linear-gradient(to top, rgba(0, 0, 0, 0.98) 50%, rgba(255, 255, 255, 0)), url(${image})`};
   background-position-y: inherit;
   background-size: cover;
-  background-attachment: inherit;
+  background-attachment: fixed;
   background-repeat: no-repeat;
-  padding: 40px 0 90px;
+  padding: 40px 0;
   color: #fff;
 `
 const StyledSiteHeader = styled.div`
   max-width: 1200px;
   margin: auto;
-  padding: 0 20px;
+  padding: 0 80px;
+
+  @media (max-width: 960px) {
+    padding: 0 20px;
+  }
 `
 const StyledIntroContent = styled.div`
   margin-top: 90px;
@@ -34,11 +38,45 @@ const StyledIntroTitle = styled.h1`
   margin: 14px 0;
 `
 const StyledContainer = styled.div`
-  ${'' /* margin: 80px auto;
-  max-width: 74em; */}
-  margin: 0 auto;
+  margin: auto;
   max-width: 74em;
-  padding: 0 20px;
+`
+// nav
+const StyledHeader = styled.nav`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+  padding: 12px;
+  margin: 0 48px;
+`
+const StyledLogo = styled.a`
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: row;
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  cursor: pointer;
+  border: 1px solid var(--main-color);
+  padding: 5px 5px;
+  align-self: flex-start;
+  border-radius: 30px;
+`
+const StyledHeaderLink = styled.a`
+  display: flex;
+  justify-content: center;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 15px;
+  padding: 15px;
+`
+const StyledRightMenu = styled.div`
+  display: flex;
+  align-self: flex-end;
+  align-items: center;
 `
 
 const LOCAL_ARTISTS_QUERY = gql`
@@ -92,8 +130,6 @@ const Index = () => {
     if (data.localArtists.count === artists.length) return null
     const currentLength = artists.length
 
-    console.log('count', data.localArtists.count)
-    console.log('limit', limit)
 
     setLoadingMore(true)
 
@@ -114,11 +150,21 @@ const Index = () => {
     })
   }
 
-  if (error) return <p>{error.message}</p>
-
   return (
     <>
         <StyledHero image='/images/swirls.jpeg'>
+        <StyledHeader>
+          <StyledLogo href="#" />
+          {/* <HeaderContainer>
+          <HeaderLink href="#">Home</HeaderLink>
+          <HeaderLink href="#">Explore</HeaderLink>
+          <HeaderLink href="#">Feed</HeaderLink>
+          <HeaderLink href="#">Search</HeaderLink>
+        </HeaderContainer> */}
+          <StyledRightMenu>
+            <StyledHeaderLink href="/about">About</StyledHeaderLink>
+          </StyledRightMenu>
+        </StyledHeader>
           <StyledSiteHeader>
             <StyledIntroContent>
             <IntroDesc>daemo.</IntroDesc>
@@ -127,14 +173,14 @@ const Index = () => {
             </StyledIntroContent>
           </StyledSiteHeader>
         </StyledHero>
-        <StyledContainer>
-
+      <StyledContainer>
         <Feed
           artists={artists}
           onLoadMore={() => loadMore()}
           loadingMore={loadingMore}
           loading={loading}
           query={query}
+          error={error}
         />
         </StyledContainer>
       </>
