@@ -34,7 +34,9 @@ export default class Document extends NextDocument {
   render() {
     return (
       <Html lang="en">
-        <Head />
+        <Head>
+          <link rel="shortcut icon" href="/images/favicon.ico" />
+        </Head>
         <body>
           <SiteContainer>
             <Main />

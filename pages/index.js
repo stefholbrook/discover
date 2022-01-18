@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import union from 'lodash.union'
 import { gql, useQuery } from '@apollo/client'
 import styled from 'styled-components'
@@ -51,18 +52,11 @@ const StyledHeader = styled.nav`
   padding: 12px;
   margin: 0 48px;
 `
-const StyledLogo = styled.a`
+const StyledLogo = styled.img`
   display: flex;
-  justify-content: flex-start;
-  flex-direction: row;
-  width: 40px;
-  height: 40px;
-  background-color: transparent;
   cursor: pointer;
-  border: 1px solid var(--main-color);
   padding: 5px 5px;
   align-self: flex-start;
-  border-radius: 30px;
 `
 const StyledHeaderLink = styled.a`
   display: flex;
@@ -154,25 +148,21 @@ const Index = () => {
     <>
         <StyledHero image='/images/swirls.jpeg'>
         <StyledHeader>
-          <StyledLogo href="#" />
-          {/* <HeaderContainer>
-          <HeaderLink href="#">Home</HeaderLink>
-          <HeaderLink href="#">Explore</HeaderLink>
-          <HeaderLink href="#">Feed</HeaderLink>
-          <HeaderLink href="#">Search</HeaderLink>
-        </HeaderContainer> */}
+          <Link href='/' passHref>
+            <StyledLogo src='/images/daemo_logo.png' />
+          </Link>
           <StyledRightMenu>
             <StyledHeaderLink href="/about">About</StyledHeaderLink>
           </StyledRightMenu>
         </StyledHeader>
-          <StyledSiteHeader>
-            <StyledIntroContent>
+        <StyledSiteHeader>
+          <StyledIntroContent>
             <IntroDesc>daemo.</IntroDesc>
             <StyledIntroTitle>Discover | The best music you've never heard.</StyledIntroTitle>
             <QueryForm artists={artists || []} refetch={() => refetch()} />
-            </StyledIntroContent>
-          </StyledSiteHeader>
-        </StyledHero>
+          </StyledIntroContent>
+        </StyledSiteHeader>
+      </StyledHero>
       <StyledContainer>
         <Feed
           artists={artists}
