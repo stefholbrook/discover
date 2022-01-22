@@ -20,6 +20,7 @@
     "lodash.union": "^4.6.0",
     "musicbrainz-api": "^0.6.0",
     "next": "latest",
+    "next-pwa": "^5.4.4",
     "promise-throttle": "^1.1.2",
     "prop-types": "^15.6.2",
     "react": "^17.0.2",

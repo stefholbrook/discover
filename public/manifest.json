@@ -1,0 +1,28 @@
+{
+  "name": "Daemo Discover",
+  "short_name": "Discover",
+  "theme_color": "#00ffd1",
+  "background_color": "#000",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/icons/daemo_icon_144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/daemo_icon_512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/daemo_logo.png",
+      "sizes": "108x37",
+      "type": "image/png"
+    }
+  ],
+  "splash_pages": null
+}
