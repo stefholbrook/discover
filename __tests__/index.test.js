@@ -2,14 +2,23 @@
  * @jest-environment jsdom
  */
 
-import React from 'react'
+import React, { Fragment } from 'react'
 import { shallow } from 'enzyme'
-import { screen } from '@testing-library/react'
+import localArtists from '../__mocks__/artists.json'
+import Home from '../pages/index.js'
+
+const useRouter = jest.spyOn(require('next/router'), 'useRouter')
+const useQuery = jest.spyOn(require('@apollo/client'), 'useQuery')
 
 describe('Home', () => {
   it('renders a heading', () => {
-    // const render = shallow(<Home />)
+    useRouter.mockImplementationOnce(() => ({
+      query: { search: 'eyJsb2NhdGlvbiI6InNhbHQgbGFrZSBjaXR5IiwiZGVjYWRlIjoiMjAxNyBUTyAyMDIyIn0=' },
+    }))
+    useQuery.mockImplementationOnce(() => ({ localArtists }))
 
-    // expect(render.find(HomeHighlights)).toHaveLength(1)
+    const render = shallow(<Home />)
+
+    expect(render.find('div')).toBeTruthy()
   })
 })

@@ -103,7 +103,6 @@ const LOCAL_ARTISTS_QUERY = gql`
 
 const Index = () => {
   const router = useRouter()
-  const [limit, setLimit] = useState(10)
   const [loadingMore, setLoadingMore] = useState(false)
   const [artists, setArtists] = useState(null)
 
@@ -130,23 +129,17 @@ const Index = () => {
     fetchMore({
       variables: {
         offset: currentLength,
-        // limit
       },
     }).then((fetchMoreResult) => {
-      // TODO: handle if limit is 100 or when data length === count
-      // console.log(currentLength + fetchMoreResult.data.localArtists.artists.length)
-
       setLoadingMore(false)
       // merge `artists` with new results so it renders all previously fetched results
       setArtists(union(artists, fetchMoreResult.data.localArtists.artists))
-      // MusicBrainz max limit is 100
-      // setLimit(currentLength + fetchMoreResult.data.localArtists.artists.length)
     })
   }
 
   return (
     <>
-        <StyledHero image='/images/swirls.jpeg'>
+      <StyledHero image='/images/swirls.jpeg'>
         <StyledHeader>
           <Link href='/' passHref>
             <StyledLogo src='/images/daemo_logo.png' />
@@ -172,8 +165,8 @@ const Index = () => {
           query={query}
           error={error}
         />
-        </StyledContainer>
-      </>
+      </StyledContainer>
+    </>
   )
 }
 
