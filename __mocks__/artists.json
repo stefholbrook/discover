@@ -1,0 +1,30 @@
+{
+  "data": {
+    "localArtists": {
+      "count": 561,
+      "offset": 0,
+      "artists": [
+        {
+          "name": "clipping.",
+          "images": [
+            {
+              "url": "https://i.scdn.co/image/ab6761610000e5ebcc61b54c332a2c8baaaf375b"
+            },
+            {
+              "url": "https://i.scdn.co/image/ab67616100005174cc61b54c332a2c8baaaf375b"
+            },
+            {
+              "url": "https://i.scdn.co/image/ab6761610000f178cc61b54c332a2c8baaaf375b"
+            }
+          ],
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/5HJ2kX5UTwN4Ns8fB5Rn1I"
+          },
+          "followers": {
+            "total": 196615
+          }
+        }
+      ]
+    }
+  }
+}
