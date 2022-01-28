@@ -4,7 +4,9 @@ export const typeDefs = gql`
   # artist types
 
   type Artist {
-    id: ID
+    spotifyId: String
+    type: String
+    musicBrainzId: String
     name: String
     followers: Followers
     disambiguation: String

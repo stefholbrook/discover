@@ -7,6 +7,7 @@ import styled from 'styled-components'
 
 import Feed from '../components/feed.js'
 import QueryForm from '../components/query-form.js'
+import { get, insertArtists } from '../lib/artist/rxdb.js'
 
 const StyledHero = styled.div`
   background-image: ${({ image }) => `linear-gradient(to top, rgba(0, 0, 0, 0.98) 50%, rgba(255, 255, 255, 0)), url(${image})`};
@@ -79,7 +80,7 @@ const LOCAL_ARTISTS_QUERY = gql`
       count
       offset
       artists {
-        id
+        spotifyId
         name
         area {
           type
@@ -101,7 +102,7 @@ const LOCAL_ARTISTS_QUERY = gql`
   }
 `
 
-const Index = () => {
+export default function Index() {
   const router = useRouter()
   const [loadingMore, setLoadingMore] = useState(false)
   const [artists, setArtists] = useState(null)
@@ -119,10 +120,16 @@ const Index = () => {
     onCompleted: () => data && setArtists(data.localArtists.artists)
   })
 
+  const addArtists = async () => {
+    const db = await get()
+
+    await insertArtists(artists, db)
+  }
+
   const loadMore = () => {
     if (data.localArtists.count === artists.length) return null
-    const currentLength = artists.length
 
+    const currentLength = artists.length
 
     setLoadingMore(true)
 
@@ -134,6 +141,7 @@ const Index = () => {
       setLoadingMore(false)
       // merge `artists` with new results so it renders all previously fetched results
       setArtists(union(artists, fetchMoreResult.data.localArtists.artists))
+      addArtists()
     })
   }
 
@@ -169,5 +177,3 @@ const Index = () => {
     </>
   )
 }
-
-export default Index
