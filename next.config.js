@@ -9,4 +9,8 @@ module.exports = withPWA({
     runtimeCaching,
   },
   reactStrictMode: true,
+  env: {
+    RXDB_NAME: process.env.RXDB_NAME,
+    RXDB_PASSWORD: process.env.RXDB_PASSWORD,
+  },
 })

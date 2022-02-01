@@ -141,8 +141,9 @@ export default function Index() {
       setLoadingMore(false)
       // merge `artists` with new results so it renders all previously fetched results
       setArtists(union(artists, fetchMoreResult.data.localArtists.artists))
-      addArtists()
     })
+
+    addArtists()
   }
 
   return (
