@@ -60,12 +60,21 @@ export const typeDefs = gql`
     password: String!
   }
 
+  input ArtistsInput {
+    artists: [Artist]
+  }
+
   type SignUpPayload {
     user: User!
   }
 
   type SignInPayload {
     user: User!
+  }
+
+  type SyncPayload {
+    error: Boolean
+    message: String
   }
 
   type Query {
@@ -76,7 +85,7 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    signUp(input: SignUpInput!): SignUpPayload!
+    syncArtists(input: [ArtistsInput]!): SyncArtistPayload
     signIn(input: SignInInput!): SignInPayload!
     signOut: Boolean!
   }

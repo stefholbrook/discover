@@ -23,12 +23,6 @@ export const resolvers = {
     async localArtists(_parent, args, _context, _info) {
       const artists = await fetchArtistsByArea(args.location, args.decade, args.offset, args.limit)
 
-      try {
-        await insertArtists(artists)
-      } catch (error) {
-        console.log(error)
-      }
-
       return artists
     },
   },
@@ -40,7 +34,14 @@ export const resolvers = {
       return parent['type-id']
     }
   },
-  // Mutation: {
+  Mutation: {
+    // async syncArtists(parent, args, _context, _info) {
+    //   try {
+    //     await insertArtists(artists)
+    //   } catch (error) {
+    //     console.log(error)
+    //   }
+    // }
     // async signUp(_parent, args, _context, _info) {
     //   const user = await createUser(args.input)
     //   return { user }
@@ -65,5 +66,5 @@ export const resolvers = {
     //   removeTokenCookie(context.res)
     //   return true
     // },
-  // },
+  },
 }
