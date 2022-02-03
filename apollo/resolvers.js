@@ -3,6 +3,7 @@
 // import { setLoginSession, getLoginSession } from '../lib/auth'
 // import { removeTokenCookie } from '../lib/auth-cookies'
 import { fetchArtistsByArea } from '../lib/fetch-artists.js'
+import insertArtists from '../lib/artist/db.js'
 
 export const resolvers = {
   Query: {
@@ -21,6 +22,13 @@ export const resolvers = {
     // },
     async localArtists(_parent, args, _context, _info) {
       const artists = await fetchArtistsByArea(args.location, args.decade, args.offset, args.limit)
+
+      try {
+        await insertArtists(artists)
+      } catch (error) {
+        console.log(error)
+      }
+
       return artists
     },
   },

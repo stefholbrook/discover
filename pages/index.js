@@ -146,6 +146,8 @@ export default function Index() {
     addArtists()
   }
 
+  console.log(artists)
+
   return (
     <>
       <StyledHero image='/images/swirls.jpeg'>
