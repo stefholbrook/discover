@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import Feed from '../components/feed.js'
 import QueryForm from '../components/query-form.js'
-import { get, insertRxArtists } from '../lib/artist/rxdb.js'
+import { get, insertArtists } from '../lib/artist/rxdb.js'
 
 const StyledHero = styled.div`
   background-image: ${({ image }) => `linear-gradient(to top, rgba(0, 0, 0, 0.98) 50%, rgba(255, 255, 255, 0)), url(${image})`};
@@ -123,7 +123,7 @@ export default function Index() {
   const addArtists = async () => {
     const db = await get()
 
-    await insertRxArtists(artists, db)
+    await insertArtists(artists, db)
   }
 
   const loadMore = () => {
@@ -145,8 +145,6 @@ export default function Index() {
 
     addArtists()
   }
-
-  console.log(artists)
 
   return (
     <>
